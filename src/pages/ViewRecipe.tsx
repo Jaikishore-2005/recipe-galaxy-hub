@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useRecipes } from "../contexts/RecipeContext";
 import { useAuth } from "../contexts/AuthContext";
 import { CookMode } from "../components/recipes/CookMode";
-import { ArrowLeft, Edit, Share, Clock, Play, User, Users } from "lucide-react";
+import { ArrowLeft, Edit, Share, Clock, Play, User, Users, Timer } from "lucide-react";
 import { Recipe as RecipeType } from "../types";
 
 const ViewRecipe = () => {

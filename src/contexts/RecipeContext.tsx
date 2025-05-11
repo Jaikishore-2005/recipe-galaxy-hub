@@ -1,6 +1,6 @@
-
 import React, { createContext, useContext, useState } from "react";
 import { Recipe, Ingredient, Step, Collaborator } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 // Sample data for recipe demos
 const mockRecipesData: Recipe[] = [
