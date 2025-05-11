@@ -26,10 +26,10 @@ const PublicRecipes = () => {
   });
   
   return (
-    <div>
+    <div className="w-full max-w-full overflow-hidden">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Public Recipes</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl md:text-3xl font-bold">Public Recipes</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Browse through recipes shared by the community
         </p>
       </div>
@@ -47,11 +47,11 @@ const PublicRecipes = () => {
           />
         </div>
         
-        <div>
-          <div className="flex flex-wrap gap-2">
+        <div className="overflow-x-auto pb-2">
+          <div className="flex flex-nowrap gap-2 min-w-max">
             <button
               onClick={() => setSelectedTag(null)}
-              className={`px-3 py-1 rounded-full text-sm ${
+              className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
                 selectedTag === null 
                   ? 'bg-primary text-primary-foreground' 
                   : 'bg-muted hover:bg-muted/80'
@@ -64,7 +64,7 @@ const PublicRecipes = () => {
               <button
                 key={tag}
                 onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                className={`px-3 py-1 rounded-full text-sm ${
+                className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
                   selectedTag === tag 
                     ? 'bg-primary text-primary-foreground' 
                     : 'bg-recipe-mint hover:bg-recipe-mint/80'
@@ -80,13 +80,13 @@ const PublicRecipes = () => {
       {/* Recipes grid */}
       {filteredRecipes.length === 0 ? (
         <div className="text-center py-12 bg-muted/30 rounded-lg">
-          <h2 className="text-xl font-medium mb-2">No recipes found</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-lg md:text-xl font-medium mb-2">No recipes found</h2>
+          <p className="text-sm md:text-base text-muted-foreground">
             Try adjusting your search or filters
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {filteredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} showActions={false} />
           ))}
