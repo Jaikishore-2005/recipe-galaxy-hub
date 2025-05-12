@@ -1,9 +1,9 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const Login = () => {
   const navigate = useNavigate();
   
   // If user is already authenticated, redirect to home
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
     }
@@ -43,86 +43,112 @@ const Login = () => {
   };
   
   return (
-    <div className="max-w-md mx-auto pt-4">
-      <div className="bg-white rounded-lg shadow-sm border border-border p-8">
-        <div className="flex justify-center mb-6">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold">Welcome to RecipeHub</h1>
-            <p className="text-muted-foreground mt-2">
-              Log in to access your recipes and collaborate with others
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-recipe-mint/30 to-white p-4">
+      <div className="w-full max-w-md">
+        {/* Logo and Heading */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary mb-4 shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M15 11h.01M11 15h.01M16 16h.01M11 11h.01" />
+              <path d="M3 7V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2v-2" />
+              <path d="M10 2v8.5a.5.5 0 01-.5.5H3" />
+              <path d="M7 16a2 2 0 100-4 2 2 0 000 4z" />
+            </svg>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-800">Welcome to RecipeHub</h1>
+          <p className="text-gray-600 mt-2">Log in to access your recipes and collaborate with others</p>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-8 transition-all">
+          {error && (
+            <div className="bg-destructive/10 text-destructive p-4 rounded-lg mb-6 flex items-center">
+              <span className="flex-1">{error}</span>
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none transition-all"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none transition-all"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            
+            <div className="pt-2">
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-lg flex items-center justify-center text-base font-medium"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="inline-flex items-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Logging in...
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center">
+                    <LogIn className="mr-2 h-5 w-5" />
+                    Log in
+                  </span>
+                )}
+              </Button>
+            </div>
+          </form>
+          
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-600">
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-primary hover:underline font-medium">
+                Sign up now
+              </Link>
             </p>
           </div>
         </div>
         
-        {error && (
-          <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-6">
-            {error}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-input p-2"
-              placeholder="your@email.com"
-              required
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-input p-2"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-          
-          <div className="pt-2">
-            <Button
-              type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-              disabled={isLoading}
-            >
-              {isLoading ? "Logging in..." : "Log in"}
-            </Button>
-          </div>
-        </form>
-        
-        <div className="mt-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
-              Sign up now
-            </Link>
+        {/* Demo credentials */}
+        <div className="mt-6 text-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-700 mb-2">
+            Demo credentials:
           </p>
+          <div className="grid grid-cols-1 gap-1">
+            <div className="bg-gray-50 rounded-md p-2">
+              <p className="text-sm">
+                <span className="text-gray-500">Email:</span> <span className="font-mono text-gray-800">demo@example.com</span>
+              </p>
+            </div>
+            <div className="bg-gray-50 rounded-md p-2">
+              <p className="text-sm">
+                <span className="text-gray-500">Password:</span> <span className="font-mono text-gray-800">password123</span>
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      {/* Demo credentials */}
-      <div className="mt-6 text-center bg-recipe-mint/30 p-4 rounded-lg">
-        <p className="text-sm mb-2">
-          <strong>Demo credentials:</strong>
-        </p>
-        <p className="text-sm">
-          Email: <span className="font-mono">demo@example.com</span>
-        </p>
-        <p className="text-sm">
-          Password: <span className="font-mono">password123</span>
-        </p>
       </div>
     </div>
   );
