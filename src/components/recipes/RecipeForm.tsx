@@ -1,7 +1,23 @@
 
 import React, { useState } from "react";
 import { Recipe } from "../../types";
-import { X, Plus, Timer } from "lucide-react";
+import { X, Plus, Timer, ChevronDown, Tag, Search } from "lucide-react";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface RecipeFormProps {
   initialRecipe?: Partial<Recipe>;
@@ -28,6 +44,17 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   const [newIngredient, setNewIngredient] = useState({ name: "", quantity: 0, unit: "" });
   const [newStep, setNewStep] = useState({ description: "", timerMinutes: undefined });
   const [newTag, setNewTag] = useState("");
+  const [showCustomTagInput, setShowCustomTagInput] = useState(false);
+
+  // Common recipe tags
+  const commonTags = [
+    "Breakfast", "Lunch", "Dinner", "Dessert", 
+    "Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free",
+    "Quick & Easy", "Healthy", "Comfort Food", "Spicy",
+    "Italian", "Mexican", "Asian", "Mediterranean",
+    "Baking", "Grilling", "Slow Cooker", "Instant Pot",
+    "Budget Friendly", "Family Friendly", "Other..."
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -93,6 +120,21 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       tags: [...(recipe.tags || []), newTag]
     });
     setNewTag("");
+    setShowCustomTagInput(false);
+  };
+
+  const handleSelectTag = (tag: string) => {
+    if (tag === "Other...") {
+      setShowCustomTagInput(true);
+      return;
+    }
+    
+    if ((recipe.tags || []).includes(tag)) return;
+    
+    setRecipe({
+      ...recipe,
+      tags: [...(recipe.tags || []), tag]
+    });
   };
 
   const handleRemoveTag = (tag: string) => {
@@ -108,19 +150,18 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       <div>
         <label htmlFor="title" className="block text-sm font-medium mb-1">
           Recipe Title
         </label>
-        <input
-          type="text"
+        <Input
           id="title"
           name="title"
           value={recipe.title}
           onChange={handleChange}
           disabled={isReadOnly}
-          className="w-full rounded-md border border-input p-2"
+          className="w-full"
           required
         />
       </div>
@@ -136,7 +177,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           value={recipe.description}
           onChange={handleChange}
           disabled={isReadOnly}
-          className="w-full rounded-md border border-input p-2"
+          className="w-full rounded-md border border-input bg-background p-2"
         />
       </div>
 
@@ -144,7 +185,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
         <label htmlFor="servings" className="block text-sm font-medium mb-1">
           Default Servings
         </label>
-        <input
+        <Input
           type="number"
           id="servings"
           name="servings"
@@ -152,7 +193,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           value={recipe.servings}
           onChange={handleChange}
           disabled={isReadOnly}
-          className="w-full rounded-md border border-input p-2"
+          className="w-full"
         />
       </div>
 
@@ -175,21 +216,64 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           ))}
         </div>
         {!isReadOnly && (
-          <div className="flex">
-            <input
-              type="text"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              placeholder="Add a tag"
-              className="flex-1 rounded-l-md border border-input p-2"
-            />
-            <button
-              type="button"
-              onClick={handleAddTag}
-              className="btn-recipe-primary rounded-l-none"
-            >
-              Add
-            </button>
+          <div className="flex flex-col space-y-2">
+            {showCustomTagInput ? (
+              <div className="flex gap-2">
+                <div className="flex-grow flex">
+                  <Input
+                    type="text"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    placeholder="Enter custom tag"
+                    className="flex-1 rounded-r-none"
+                  />
+                  <Button 
+                    type="button" 
+                    onClick={handleAddTag} 
+                    className="rounded-l-none"
+                    variant="default"
+                  >
+                    Add
+                  </Button>
+                </div>
+                <Button
+                  type="button"
+                  onClick={() => setShowCustomTagInput(false)}
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-full flex justify-between items-center gap-2">
+                    <div className="flex items-center gap-2">
+                      <Tag size={16} />
+                      <span>Select or add tags</span>
+                    </div>
+                    <ChevronDown size={16} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 max-h-80 overflow-y-auto">
+                  <div className="p-2 border-b">
+                    <div className="flex items-center gap-2 px-2 py-1 text-sm text-muted-foreground">
+                      <Search size={14} />
+                      <span>Common Tags</span>
+                    </div>
+                  </div>
+                  {commonTags.map((tag) => (
+                    <DropdownMenuItem 
+                      key={tag}
+                      onClick={() => handleSelectTag(tag)}
+                      className="cursor-pointer"
+                    >
+                      {tag}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         )}
       </div>
@@ -213,37 +297,36 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           ))}
         </div>
         {!isReadOnly && (
-          <div className="grid grid-cols-3 gap-2">
-            <input
+          <div className="grid grid-cols-3 gap-3">
+            <Input
               type="text"
               placeholder="Ingredient"
               value={newIngredient.name}
               onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
-              className="col-span-3 md:col-span-1 rounded-md border border-input p-2"
+              className="col-span-3 md:col-span-1"
             />
-            <input
+            <Input
               type="number"
               placeholder="Amount"
               value={newIngredient.quantity || ""}
               onChange={(e) => setNewIngredient({ ...newIngredient, quantity: Number(e.target.value) })}
-              className="rounded-md border border-input p-2"
               min="0"
             />
-            <div className="flex">
-              <input
+            <div className="flex gap-3">
+              <Input
                 type="text"
                 placeholder="Unit"
                 value={newIngredient.unit}
                 onChange={(e) => setNewIngredient({ ...newIngredient, unit: e.target.value })}
-                className="flex-1 rounded-l-md border border-input p-2"
+                className="flex-1"
               />
-              <button
+              <Button
                 type="button"
                 onClick={handleAddIngredient}
-                className="btn-recipe-primary rounded-l-none"
+                className="btn-recipe-primary"
               >
                 <Plus size={16} />
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -278,7 +361,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           ))}
         </div>
         {!isReadOnly && (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <textarea
               placeholder="Step description"
               value={newStep.description}
@@ -286,12 +369,12 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
               className="w-full rounded-md border border-input p-2"
               rows={2}
             />
-            <div className="flex gap-2">
-              <div className="flex items-center">
-                <Timer size={16} className="mr-1" />
-                <span className="text-sm">Timer:</span>
+            <div className="flex gap-3">
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <Timer size={16} className="text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Timer:</span>
               </div>
-              <input
+              <Input
                 type="number"
                 placeholder="Minutes (optional)"
                 value={newStep.timerMinutes || ""}
@@ -301,16 +384,16 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                     timerMinutes: e.target.value ? Number(e.target.value) : undefined 
                   })
                 }
-                className="flex-1 rounded-md border border-input p-2"
+                className="flex-1"
                 min="0"
               />
-              <button
+              <Button
                 type="button"
                 onClick={handleAddStep}
                 className="btn-recipe-primary"
               >
                 Add Step
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -324,18 +407,18 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           checked={recipe.isPublic}
           onChange={handleCheckboxChange}
           disabled={isReadOnly}
-          className="rounded border-gray-300 text-primary focus:ring-primary"
+          className="rounded border-gray-300 text-primary focus:ring-primary mr-2"
         />
-        <label htmlFor="isPublic" className="ml-2 text-sm">
+        <label htmlFor="isPublic" className="text-sm">
           Make this recipe public (anyone can view)
         </label>
       </div>
 
       {!isReadOnly && (
         <div className="flex justify-end">
-          <button type="submit" className="btn-recipe-primary">
+          <Button type="submit" className="btn-recipe-primary">
             {initialRecipe.id ? "Update Recipe" : "Create Recipe"}
-          </button>
+          </Button>
         </div>
       )}
     </form>
