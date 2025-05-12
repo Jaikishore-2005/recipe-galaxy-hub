@@ -3,10 +3,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 import { RecipeProvider } from "./contexts/RecipeContext";
+import { ProtectedRoute } from "./utils/ProtectedRoute";
 
 // Pages
 import Home from "./pages/Home";
@@ -32,17 +33,56 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<MainLayout><Home /></MainLayout>} />
-              <Route path="/my-recipes" element={<MainLayout><MyRecipes /></MainLayout>} />
-              <Route path="/shared-with-me" element={<MainLayout><SharedWithMe /></MainLayout>} />
-              <Route path="/public-recipes" element={<MainLayout><PublicRecipes /></MainLayout>} />
-              <Route path="/create-recipe" element={<MainLayout><CreateEditRecipe /></MainLayout>} />
-              <Route path="/recipes/:recipeId" element={<MainLayout><ViewRecipe /></MainLayout>} />
-              <Route path="/recipes/:recipeId/edit" element={<MainLayout><CreateEditRecipe /></MainLayout>} />
-              <Route path="/recipes/:recipeId/share" element={<MainLayout><ShareRecipe /></MainLayout>} />
-              <Route path="/account" element={<MainLayout><Account /></MainLayout>} />
+              {/* Public routes */}
               <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
               <Route path="/signup" element={<MainLayout><Signup /></MainLayout>} />
+              
+              {/* Protected routes */}
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <MainLayout><Home /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/my-recipes" element={
+                <ProtectedRoute>
+                  <MainLayout><MyRecipes /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/shared-with-me" element={
+                <ProtectedRoute>
+                  <MainLayout><SharedWithMe /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/public-recipes" element={
+                <ProtectedRoute>
+                  <MainLayout><PublicRecipes /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/create-recipe" element={
+                <ProtectedRoute>
+                  <MainLayout><CreateEditRecipe /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/recipes/:recipeId" element={
+                <ProtectedRoute>
+                  <MainLayout><ViewRecipe /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/recipes/:recipeId/edit" element={
+                <ProtectedRoute>
+                  <MainLayout><CreateEditRecipe /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/recipes/:recipeId/share" element={
+                <ProtectedRoute>
+                  <MainLayout><ShareRecipe /></MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/account" element={
+                <ProtectedRoute>
+                  <MainLayout><Account /></MainLayout>
+                </ProtectedRoute>
+              } />
               <Route path="*" element={<MainLayout><NotFound /></MainLayout>} />
             </Routes>
           </BrowserRouter>

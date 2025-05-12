@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,8 +11,15 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  
+  // If user is already authenticated, redirect to home
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,23 +43,13 @@ const Login = () => {
   };
   
   return (
-    <div className="max-w-md mx-auto">
-      <div className="mb-8">
-        <Link 
-          to="/" 
-          className="flex items-center text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft size={16} className="mr-1" />
-          Back to home
-        </Link>
-      </div>
-      
+    <div className="max-w-md mx-auto pt-4">
       <div className="bg-white rounded-lg shadow-sm border border-border p-8">
         <div className="flex justify-center mb-6">
           <div className="text-center">
-            <h2 className="text-2xl font-bold">Welcome to RecipeHub</h2>
-            <p className="text-muted-foreground">
-              Log in to create and share recipes
+            <h1 className="text-3xl font-bold">Welcome to RecipeHub</h1>
+            <p className="text-muted-foreground mt-2">
+              Log in to access your recipes and collaborate with others
             </p>
           </div>
         </div>
@@ -94,21 +92,21 @@ const Login = () => {
           </div>
           
           <div className="pt-2">
-            <button
+            <Button
               type="submit"
-              className="w-full btn-recipe-primary py-2"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               disabled={isLoading}
             >
               {isLoading ? "Logging in..." : "Log in"}
-            </button>
+            </Button>
           </div>
         </form>
         
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-primary hover:underline">
-              Sign up
+            <Link to="/signup" className="text-primary hover:underline font-medium">
+              Sign up now
             </Link>
           </p>
         </div>
