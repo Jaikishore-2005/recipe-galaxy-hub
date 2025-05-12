@@ -17,12 +17,25 @@ const Home = () => {
   
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">
+      {/* Hero section with logo */}
+      <div className="mb-8 text-center">
+        {!isAuthenticated && (
+          <div className="flex flex-col items-center mb-6">
+            <img 
+              src="/lovable-uploads/3254d9db-868b-4134-9d0a-f642494baf9b.png" 
+              alt="RecipeHub Logo" 
+              className="h-24 w-auto mb-4" 
+            />
+            <h1 className="text-4xl font-bold text-primary mb-2">RecipeHub</h1>
+            <p className="text-xl text-muted-foreground">Where Recipe Meets Collaboration</p>
+          </div>
+        )}
+        
+        <h2 className="text-3xl font-bold">
           {isAuthenticated 
             ? `Welcome back, ${currentUser?.name}!` 
             : "Welcome to RecipeHub!"}
-        </h1>
+        </h2>
         <p className="text-muted-foreground">
           {isAuthenticated
             ? "Continue collaborating on your recipes."

@@ -39,17 +39,18 @@ export const Sidebar = () => {
     <div className="w-64 h-full bg-white border-r border-border flex flex-col">
       <div className="p-4 border-b border-border">
         <Link to="/">
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M15 11h.01M11 15h.01M16 16h.01M11 11h.01" />
-              <path d="M3 7V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2v-2" />
-              <path d="M10 2v8.5a.5.5 0 01-.5.5H3" />
-              <path d="M7 16a2 2 0 100-4 2 2 0 000 4z" />
-            </svg>
+          <div className="flex items-center justify-center mb-2">
+            <img 
+              src="/lovable-uploads/3254d9db-868b-4134-9d0a-f642494baf9b.png" 
+              alt="RecipeHub Logo" 
+              className="h-12 w-auto" 
+            />
+          </div>
+          <h1 className="text-2xl font-bold text-center text-primary">
             RecipeHub
           </h1>
         </Link>
-        <p className="text-sm text-muted-foreground mt-1">Collaborate on recipes</p>
+        <p className="text-sm text-muted-foreground mt-1 text-center">Where Recipe Meets Collaboration</p>
       </div>
       
       <nav className="flex-1 p-4 space-y-2">

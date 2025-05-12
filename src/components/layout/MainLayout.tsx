@@ -69,7 +69,17 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             >
               <Menu size={24} />
             </button>
-            <div className="ml-4 text-lg font-medium truncate">RecipeHub</div>
+            <div className="ml-4 flex items-center">
+              <img 
+                src="/lovable-uploads/3254d9db-868b-4134-9d0a-f642494baf9b.png" 
+                alt="RecipeHub Logo" 
+                className="h-8 w-auto mr-2" 
+              />
+              <div>
+                <div className="text-lg font-medium">RecipeHub</div>
+                <div className="text-xs text-muted-foreground">Where Recipe Meets Collaboration</div>
+              </div>
+            </div>
           </header>
         )}
         
